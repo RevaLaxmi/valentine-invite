@@ -1,28 +1,33 @@
 "use client";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { FaHeart } from "react-icons/fa";
 
-export default function Home() {
+export default function InviteForm() {
+  const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     date: "",
-    time: "",
     location: "",
     message: "",
   });
   const [inviteLink, setInviteLink] = useState("");
-  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleEnvelopeClick = () => {
+    setIsOpen(true);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const link = `${window.location.origin}/invite?to=${encodeURIComponent(
+
+    // Simulating link generation
+    const link = `${window.location.origin}/invite?name=${encodeURIComponent(
       formData.name
-    )}&date=${encodeURIComponent(formData.date)}&time=${encodeURIComponent(
-      formData.time
-    )}&location=${encodeURIComponent(
+    )}&date=${encodeURIComponent(formData.date)}&location=${encodeURIComponent(
       formData.location
     )}&message=${encodeURIComponent(formData.message)}`;
+
     setInviteLink(link);
   };
 
@@ -32,87 +37,87 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-pink-200 p-6">
-      {/* Title with Animation */}
-      <motion.h1
-        className="text-4xl font-bold text-pink-600 mb-6"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      >
-        Create Your Valentine Invite 💌
-      </motion.h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-pink-100">
+      <h1 className="text-3xl font-bold text-red-600 mb-6">Create Your Valentine Invite 💌</h1>
 
-      {/* Form Container */}
-      <motion.form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg shadow-lg border-2 border-pink-400 w-full max-w-md space-y-4"
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      >
-        <input
-          type="text"
-          placeholder="Sending to (Name)"
-          className="w-full p-2 rounded-lg border border-pink-400 focus:ring-2 focus:ring-pink-300 shadow-sm"
-          required
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-        />
-        <input
-          type="date"
-          className="w-full p-2 rounded-lg border border-pink-400 focus:ring-2 focus:ring-pink-300 shadow-sm"
-          required
-          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-        />
-        <input
-          type="time"
-          className="w-full p-2 rounded-lg border border-pink-400 focus:ring-2 focus:ring-pink-300 shadow-sm"
-          onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Location"
-          className="w-full p-2 rounded-lg border border-pink-400 focus:ring-2 focus:ring-pink-300 shadow-sm"
-          required
-          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-        />
-        <textarea
-          placeholder="Write a cute message..."
-          className="w-full p-2 rounded-lg border border-pink-400 focus:ring-2 focus:ring-pink-300 shadow-sm"
-          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-        ></textarea>
-
-        {/* Generate Button */}
-        <motion.button
-          type="submit"
-          className="w-full p-3 rounded-lg bg-pink-500 text-white font-semibold shadow-md hover:bg-pink-600 transition"
-          whileHover={{ scale: 1.05 }}
-        >
-          Generate Invite Link 💖
-        </motion.button>
-      </motion.form>
-
-      {/* Invite Link Display */}
-      {inviteLink && (
+      {/* Envelope */}
+      {!isOpen && (
         <motion.div
-          className="mt-6 p-4 bg-white border-2 border-pink-400 rounded-lg shadow-md text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          className="relative w-40 h-32 bg-red-500 cursor-pointer flex items-center justify-center"
+          onClick={handleEnvelopeClick}
+          initial={{ scale: 1 }}
+          whileHover={{ scale: 1.1 }}
         >
-          <p className="text-pink-600 font-semibold">Your Invite Link:</p>
-          <a href={inviteLink} target="_blank" className="text-blue-500 underline">
-            {inviteLink}
-          </a>
-          <motion.button
-            className="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600 transition"
-            onClick={copyToClipboard}
-            whileHover={{ scale: 1.05 }}
-          >
-            Copy Invite Link
-          </motion.button>
+          {/* Flap */}
+          <motion.div
+            className="absolute top-0 left-0 w-full h-1/2 bg-red-700"
+            style={{ clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)" }}
+            animate={isOpen ? { rotateX: 180, transition: { duration: 0.6 } } : {}}
+          />
+          {/* Envelope Body */}
+          <div className="absolute bottom-0 left-0 w-full h-full bg-red-500"></div>
+          <p className="text-white font-bold">Click to Open 💌</p>
         </motion.div>
       )}
-    </main>
+
+      {/* Form Appears when Envelope Opens */}
+      {isOpen && (
+        <motion.div
+          className="bg-white p-6 mt-4 shadow-lg rounded-lg flex flex-col items-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-80">
+            <input
+              type="text"
+              placeholder="Recipient's Name"
+              className="p-2 rounded border border-pink-300"
+              required
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            />
+            <input
+              type="date"
+              className="p-2 rounded border border-pink-300"
+              required
+              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Location"
+              className="p-2 rounded border border-pink-300"
+              required
+              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+            />
+            <textarea
+              placeholder="Write a cute message..."
+              className="p-2 rounded border border-pink-300"
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+            ></textarea>
+            <button
+              type="submit"
+              className="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600"
+            >
+              Generate Invite
+            </button>
+          </form>
+
+          {/* Invite Link Section */}
+          {inviteLink && (
+            <div className="mt-4 text-center">
+              <p className="text-lg text-gray-700">Your invite link:</p>
+              <a href={inviteLink} target="_blank" className="text-blue-500 break-all">
+                {inviteLink}
+              </a>
+              <button
+                onClick={copyToClipboard}
+                className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+              >
+                Copy Link 📋
+              </button>
+            </div>
+          )}
+        </motion.div>
+      )}
+    </div>
   );
 }
