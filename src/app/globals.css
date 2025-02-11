@@ -1,21 +1,33 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: sans-serif;
+  text-align: center;
+  background: #ffe4e1;
+}
+
+h1 {
+  color: #d63384;
+}
+
+input, textarea {
+  display: block;
+  margin: 10px auto;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid pink;
+}
+
+.yes-button {
+  background: #ff69b4;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.no-button {
+  background: grey;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
 }
